@@ -1,0 +1,21 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'io.ratpack:ratpack-gradle:0.9.19'
+    }
+}
+
+apply plugin: "io.ratpack.ratpack-java"
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    compile 'com.notnoop.apns:apns:1.0.0.Beta6'
+    runtime 'org.slf4j:slf4j-simple:1.7.12'
+}
+
+mainClassName = 'com.deigote.pnas.PushNotificationsService'
