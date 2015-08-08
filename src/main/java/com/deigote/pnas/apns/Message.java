@@ -3,15 +3,22 @@ package com.deigote.pnas.apns;
 import com.notnoop.apns.APNS;
 import com.notnoop.apns.ApnsNotification;
 import com.notnoop.apns.ApnsService;
-import com.notnoop.apns.EnhancedApnsNotification;
 
 import java.util.Date;
 
 public class Message {
 
+   // Used by Jackson
+   private Message() {
+      this(null, null, null, null, null);
+   }
+
    public Message(
-      Credentials credentials, Payload payload, String deviceToken,
-      Integer ttlInSeconds, Boolean production
+      Credentials credentials,
+      Payload payload,
+      String deviceToken,
+      Integer ttlInSeconds,
+      Boolean production
    ) {
       this.credentials = credentials;
       this.payload = payload;
@@ -20,30 +27,40 @@ public class Message {
       this.production = production;
    }
 
-   final Credentials credentials;
-   final Payload payload;
-   final String deviceToken;
-   final Integer ttlInSeconds;
-   final Boolean production;
+   private final Credentials credentials;
+   private final Payload payload;
+   private final String deviceToken;
+   private final Integer ttlInSeconds;
+   private final Boolean production;
    private ApnsService apnsService;
 
    private ApnsService getApnsService() {
       if (apnsService == null) {
          apnsService = APNS.newService()
-            .withCert(credentials.getCertificate(), credentials.password)
+            .withCert(credentials.getCertificate(),credentials.password)
             .withAppleDestination(production)
             .build();
       }
       return apnsService;
    }
 
-   private ApnsNotification send() {
+   private Date getExpiryDate() {
+      return new Date(new Date().getTime() + (1000 * ttlInSeconds));
+   }
+
+   public ApnsNotification send() {
       return ttlInSeconds != null && ttlInSeconds > 0 ?
          getApnsService().push(deviceToken, payload.getPayload(), getExpiryDate()) :
          getApnsService().push(deviceToken, payload.getPayload());
    }
 
-   private Date getExpiryDate() {
-      return new Date(new Date().getTime() + (1000 * ttlInSeconds));
+   @Override
+   public String toString() {
+      return "Message{" +
+         "production=" + production +
+         ", ttlInSeconds=" + ttlInSeconds +
+         ", deviceToken='" + deviceToken + '\'' +
+         ", payload=" + payload +
+         '}';
    }
 }

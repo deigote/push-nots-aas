@@ -1,16 +1,17 @@
 package com.deigote.pnas.apns;
 
-import com.google.common.collect.ImmutableList;
 import com.notnoop.apns.APNS;
 import com.notnoop.apns.PayloadBuilder;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 
 public class Payload {
+
+   // Used by Jackson
+   private Payload() {
+      this(null, null, null, null, null, null);
+   }
 
    public Payload(
       String body, Integer badge, Map<String, String> customFields,
@@ -24,12 +25,12 @@ public class Payload {
       this.actionKey = actionKey;
    }
 
-   final String body;
-   final Integer badge;
-   final Map<String, String> customFields;
-   final String localizedKey;
-   final List<String> localizedArguments;
-   final String actionKey;
+   protected final String body;
+   protected final Integer badge;
+   protected final Map<String, String> customFields;
+   protected final String localizedKey;
+   protected final List<String> localizedArguments;
+   protected final String actionKey;
 
    String getPayload() {
       PayloadBuilder builder = APNS.newPayload();
@@ -40,6 +41,18 @@ public class Payload {
       if (localizedArguments != null) builder.localizedArguments(localizedArguments);
       if (actionKey != null) builder.actionKey(actionKey);
       return builder.build();
+   }
+
+   @Override
+   public String toString() {
+      return "Payload{" +
+         (body != null ? "body='" + body + '\'' : "") +
+         (badge != null ? " badge=" + badge : "") +
+         (customFields != null ? " customFields=" + customFields : "") +
+         (localizedKey != null ? " localizedKey='" + localizedKey : "") +
+         (localizedArguments != null ? " localizedArguments=" + localizedArguments : "") +
+         (actionKey != null ? " actionKey='" + actionKey : "") +
+         '}';
    }
 
 }

@@ -7,17 +7,28 @@ import java.util.Base64;
 
 public class Credentials {
 
+   // Used by Jackson
+   private Credentials() {
+      this(null, null);
+   }
+
    public Credentials(String certFile, String password) {
-      this.certFile = certFile;
+      this.certificate = certFile;
       this.password = password;
    }
 
-   final String certFile, password;
+   private final String certificate;
+   protected final String password;
 
    protected InputStream getCertificate() {
-      return Base64.getDecoder().wrap(
-         new ByteArrayInputStream(certFile.getBytes(StandardCharsets.UTF_8))
-      );
+      return new ByteArrayInputStream(Base64.getDecoder().decode(certificate));
    }
 
+   @Override
+   public String toString() {
+      return "Credentials{" +
+         "certFile='" + (certificate != null ? "xxx" : "null") + '\'' +
+         ", password='" + (password != null ? "xxx" : "null") + '\'' +
+         '}';
+   }
 }
