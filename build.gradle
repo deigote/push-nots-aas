@@ -14,8 +14,12 @@ repositories {
 }
 
 dependencies {
-    compile 'com.notnoop.apns:apns:1.0.0.Beta6'
-    runtime 'org.slf4j:slf4j-simple:1.7.12'
+    compile 'com.notnoop.apns:apns:1.0.0.Beta6',
+       'com.fasterxml.jackson.core:jackson-core:2.6.0',
+       'com.fasterxml.jackson.core:jackson-annotations:2.6.0',
+       'com.fasterxml.jackson.core:jackson-databind:2.6.0'
+
+   runtime 'org.slf4j:slf4j-simple:1.7.12'
 }
 
 mainClassName = 'com.deigote.pnas.PushNotificationsService'
