@@ -6,14 +6,14 @@ import com.notnoop.apns.ApnsService;
 
 import java.util.Date;
 
-public class Message {
+public class ApnsMessage {
 
    // Used by Jackson
-   private Message() {
+   private ApnsMessage() {
       this(null, null, null, null, null);
    }
 
-   public Message(
+   public ApnsMessage(
       Credentials credentials,
       Payload payload,
       String deviceToken,
