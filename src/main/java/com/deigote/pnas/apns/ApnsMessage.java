@@ -66,7 +66,7 @@ public class ApnsMessage implements Message<ApnsNotification> {
       return "Message{" +
          "production=" + production +
          ", ttlInSeconds=" + ttlInSeconds +
-         ", deviceToken='" + deviceToken + '\'' +
+         ", deviceToken='" + (deviceToken != null ? "xxx" : "null") + '\'' +
          ", payload=" + payload +
          '}';
    }
