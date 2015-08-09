@@ -18,16 +18,11 @@ public class PushNotificationsService {
          server
             .registryOf(PushNotificationsService::registerJacksonMapper)
             .handlers(chain ->
-               chain.post("apns", ctx ->
-                  ctx.parse(ApnsMessage.class)
+               chain.post("message", ctx ->
+                  ctx.parse(Message.class)
                      .wiretap(messageResult -> System.out.println(messageResult.getValue()))
-                     .flatMap(message -> Blocking.get(() -> message.send() ))
-                     .then(notification -> ctx.render(json(notification)))
-               ).post("gcm", ctx ->
-                     ctx.parse(GcmMessage.class)
-                        .wiretap(messageResult -> System.out.println(messageResult.getValue()))
-                        .flatMap(message -> Blocking.get(() -> message.send()))
-                        .then(notification -> ctx.render(json(notification)))
+                     .flatMap(message -> Blocking.get(() -> message.send()))
+                     .then(result -> ctx.render(json(result)))
                )
             )
       );
