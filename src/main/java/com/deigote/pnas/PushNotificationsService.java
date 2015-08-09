@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ratpack.exec.Blocking;
 import ratpack.jackson.Jackson;
+import static ratpack.jackson.Jackson.json;
 import ratpack.registry.RegistrySpec;
 import ratpack.server.RatpackServer;
 
@@ -21,12 +22,12 @@ public class PushNotificationsService {
                   ctx.parse(ApnsMessage.class)
                      .wiretap(messageResult -> System.out.println(messageResult.getValue()))
                      .flatMap(message -> Blocking.get(() -> message.send() ))
-                     .then(notification -> ctx.render(notification))
+                     .then(notification -> ctx.render(json(notification)))
                ).post("gcm", ctx ->
-                  ctx.parse(GcmMessage.class)
-                     .wiretap(messageResult -> System.out.println(messageResult.getValue()))
-                     .flatMap(message -> Blocking.get(() -> message.send()))
-                     .then(notification -> ctx.render(notification))
+                     ctx.parse(GcmMessage.class)
+                        .wiretap(messageResult -> System.out.println(messageResult.getValue()))
+                        .flatMap(message -> Blocking.get(() -> message.send()))
+                        .then(notification -> ctx.render(json(notification)))
                )
             )
       );
