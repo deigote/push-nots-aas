@@ -1,12 +1,14 @@
 package com.deigote.pnas.apns;
 
+import com.deigote.pnas.Message;
+import com.deigote.pnas.PushException;
 import com.notnoop.apns.APNS;
 import com.notnoop.apns.ApnsNotification;
 import com.notnoop.apns.ApnsService;
 
 import java.util.Date;
 
-public class ApnsMessage {
+public class ApnsMessage implements Message<ApnsNotification> {
 
    // Used by Jackson
    private ApnsMessage() {
@@ -48,10 +50,15 @@ public class ApnsMessage {
       return new Date(new Date().getTime() + (1000 * ttlInSeconds));
    }
 
-   public ApnsNotification send() {
-      return ttlInSeconds != null && ttlInSeconds > 0 ?
-         getApnsService().push(deviceToken, payload.getPayload(), getExpiryDate()) :
-         getApnsService().push(deviceToken, payload.getPayload());
+   public ApnsNotification send() throws PushException {
+      try {
+         return ttlInSeconds != null && ttlInSeconds > 0 ?
+            getApnsService().push(deviceToken, payload.getPayload(), getExpiryDate()) :
+            getApnsService().push(deviceToken, payload.getPayload());
+      }
+      catch (Throwable t) {
+         throw new PushException(this, t);
+      }
    }
 
    @Override

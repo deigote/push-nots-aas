@@ -1,11 +1,13 @@
 package com.deigote.pnas.gcm;
 
+import com.deigote.pnas.Message;
+import com.deigote.pnas.PushException;
 import com.google.android.gcm.server.Result;
 import com.google.android.gcm.server.Sender;
 
 import java.io.IOException;
 
-public class GcmMessage {
+public class GcmMessage implements Message<Result> {
 
    private GcmMessage() {
       this(null, null, null, null);
@@ -22,10 +24,14 @@ public class GcmMessage {
    private final Payload payload;
    private final Integer retries;
 
-   public Result send() throws IOException {
-      return new Sender(apiKey).send(
-         payload.getMessage(), registrationId, retries == null ? 0 : retries
-      );
+   public Result send() throws PushException {
+      try {
+         return new Sender(apiKey).send(
+            payload.getMessage(), registrationId, retries == null ? 0 : retries
+         );
+      } catch (IOException e) {
+         throw new PushException(this, e);
+      }
    }
 
    @Override
